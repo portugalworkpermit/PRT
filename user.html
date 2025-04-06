@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Detalhes da Permissão</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f0f0f0; }
+        .container { width: 80%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        img { margin-top: 20px; max-width: 100%; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px; margin-top: 20px; border-radius: 5px; border: 1px solid #ccc; background-color: #000; color: white; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #FF0000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Painel de Permissões</h1>
+        <p id="message">Carregando...</p>
+        <p id="name"></p>
+        <p id="nationality"></p>
+        <p>
+        
+        </p>
+        <img id="imageViewer" alt="foto do utilizador">
+        <br>
+        <button onclick="goBack()">Volte</button>
+    </div>
+
+    <script>
+        const usersData = {
+            "100227/25": { name: "ALI UMOR", nationality: "Bangladeshi",
+            image: "p1.jpg" },
+            "107080/13": { name: "Rafi", nationality: "Bangladeshi", image: "im.jpg" },
+            "103440/80": { name: "Sara", nationality: "Bangladeshi", image: "io.jpg" },
+            "103050/50": { name: "portug", nationality: "Bangladeshi", image: "oi.jpg" }
+        };
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function loadUserData() {
+            const userId = getQueryParam("id");
+            if (!userId || !usersData[userId]) {
+                document.getElementById("message").innerText = "You entered the wrong number..";
+                return;
+            }
+
+            const user = usersData[userId];
+            document.getElementById("message").innerText = "Você foi aprovado para solicitar um visto para Portugal vindo de Bangladesh.";
+            document.getElementById("name").innerText = "Name: " + user.name;
+            document.getElementById("nationality").innerText = "Nationality: " + user.nationality;
+            document.getElementById("imageViewer").src = user.image;
+
+            document.getElementById("imageViewer").onerror = function() {
+                alert("Image not found!");
+            };
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        window.onload = loadUserData;
+    </script>
+</body>
+</html>
