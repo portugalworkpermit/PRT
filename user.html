@@ -26,9 +26,39 @@
             text-align: center;
             padding-top: 20%;
         }
+          /* ব্লার সিস্টেম */
+    #blurOverlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: none;
+    }
+
+    /* Watermark সিস্টেম */
+    #watermark {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        color: rgba(255,255,255,0.4);
+        z-index: 9998;
+        pointer-events: none;
+        animation: float 5s infinite alternate;
+    }
+
+    @keyframes float {
+        from { transform: translateY(0px); }
+        to { transform: translateY(10px); }
+    }
     </style>
 </head>
 <body oncontextmenu="return false;">
+    <div id="blurOverlay"></div>
+<div id="watermark">Protected Content</div>
     <div class="container">
         <h1>Painel de Permissões</h1>
         <p id="message">Carregando...</p>
@@ -104,6 +134,37 @@
                 triggerSecurityBreach();
             }
         }, 3000);
+          function triggerSecurityBreach() {
+        document.getElementById('blurOverlay').style.display = 'block';
+        alert('⚠️ Security Alert: Screenshot or Screen Capture Detected!\nYou are being monitored.');
+        setTimeout(() => {
+            window.location.href = "index.html"; // ইউজারকে লগআউট করে দাও
+        }, 3000);
+    }
+
+    // Screen Suspicion Detection
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
+            triggerSecurityBreach();
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
+            triggerSecurityBreach();
+        }
+    });
+
+    window.addEventListener('blur', function() {
+        triggerSecurityBreach();
+    });
+
+    // Watermark এ তারিখ+সময় দেখাও
+    function updateWatermark() {
+        const now = new Date();
+        document.getElementById('watermark').innerText = 'Protected Content - ' + now.toLocaleString();
+    }
+    setInterval(updateWatermark, 1000);
     </script>
 </body>
 </html>
