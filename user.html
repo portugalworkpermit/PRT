@@ -3,13 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Detalhes da Permissão</title>
+    <title>Detalhes da Permissão</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f0f0f0; }
         .container { width: 80%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
         img { margin-top: 20px; max-width: 100%; border: 1px solid #ccc; border-radius: 5px; }
         button { padding: 10px; margin-top: 20px; border-radius: 5px; border: 1px solid #ccc; background-color: #000; color: white; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #FF0000; }
+
+        /* Blackout overlay */
+        #blackout {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0.98;
+            z-index: 9999;
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            padding-top: 20%;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -18,19 +34,20 @@
         <p id="message">Carregando...</p>
         <p id="name"></p>
         <p id="nationality"></p>
-        <p>
-        
-        </p>
+        <p></p>
         <img id="imageViewer" alt="foto do utilizador">
         <br>
         <button onclick="goBack()">Volte</button>
     </div>
 
+    <!-- Blackout system overlay -->
+    <div id="blackout">⚠️ Screenshot attempt detected!<br> You are being logged out...</div>
+
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
+
         const usersData = {
-            "100227/25": { name: "ALI UMOR", nationality: "Bangladeshi",
-            image: "p2.jpg" },
+            "100227/25": { name: "ALI UMOR", nationality: "Bangladeshi", image: "p2.jpg" },
             "107080/13": { name: "Rafi", nationality: "Bangladeshi", image: "im.jpg" },
             "103440/80": { name: "Sara", nationality: "Bangladeshi", image: "io.jpg" },
             "103050/50": { name: "portug", nationality: "Bangladeshi", image: "oi.jpg" }
@@ -64,6 +81,29 @@
         }
 
         window.onload = loadUserData;
+
+        // Blackout + Logout Functions
+        function triggerSecurityBreach() {
+            document.getElementById('blackout').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = "index.html"; // এখানে লগআউট URL দিবা
+            }, 2000);
+        }
+
+        // Detect PrintScreen
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "PrintScreen" || e.code === "PrintScreen") {
+                navigator.clipboard.writeText('');
+                triggerSecurityBreach();
+            }
+        });
+
+        // Optional: Try to detect screen recording (experimental)
+        setInterval(() => {
+            if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
+                triggerSecurityBreach();
+            }
+        }, 3000);
     </script>
 </body>
 </html>
